@@ -1,0 +1,6 @@
+# keep secrets & local stuff out of git
+.venv/
+.env
+__pycache__/
+*.pyc
+# IMPORTANT: we DO want to commit data/chroma so the cloud app can read it

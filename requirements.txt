@@ -9,5 +9,8 @@ numpy
 pandas
 python-dotenv
 loguru
+chromadb==1.0.20
+pydantic<3
 openai
-openai
+
+

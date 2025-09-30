@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+vectorstore/
+data/raw/
+.DS_Store
+.vscode/
+.env
+.streamlit/cache/
+# Usage tracking - don't commit to GitHub
+usage_stats.json
+alerts.log

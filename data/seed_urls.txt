@@ -1,0 +1,159 @@
+# ===== Housing Process (MSU Texas) =====
+https://msutexas.edu/housing/future-mustangs/
+https://msutexas.edu/housing/apply-for-housing.php
+https://msutexas.edu/housing/fall-move-in.php
+https://msutexas.edu/housing/housing_policies/campus-residency-requirements.php
+https://msutexas.edu/housing/housing-options/housing-and-dining-rates.php
+
+# ===== University Catalog (2024–2025) =====
+https://catalog.msutexas.edu/misc/catalog_list.php?catoid=41
+https://catalog.msutexas.edu/preview_entity.php?catoid=41&ent_oid=1875
+https://catalog.msutexas.edu/preview_program.php?catoid=41&poid=5692
+https://catalog.msutexas.edu/preview_course_nopop.php?catoid=41&coid=59541
+
+# ===== Academic Colleges & Faculty =====
+# Dillard College of Business Administration
+https://msutexas.edu/academics/business/
+https://msutexas.edu/academics/business/accounting/
+https://msutexas.edu/academics/business/finance/
+https://msutexas.edu/academics/business/management/
+https://msutexas.edu/academics/business/marketing/
+https://msutexas.edu/academics/business/faculty.php
+
+# College of Education
+https://msutexas.edu/academics/education/
+https://msutexas.edu/academics/education/faculty.php
+
+# College of Health Sciences and Human Services
+https://msutexas.edu/academics/hs2/
+https://msutexas.edu/academics/hs2/nursing/
+https://msutexas.edu/academics/hs2/radiologic/
+https://msutexas.edu/academics/hs2/respiratory/
+https://msutexas.edu/academics/hs2/faculty.php
+
+# College of Humanities and Social Sciences
+https://msutexas.edu/academics/hss/
+https://msutexas.edu/academics/hss/english/
+https://msutexas.edu/academics/hss/history/
+https://msutexas.edu/academics/hss/psychology/
+https://msutexas.edu/academics/hss/sociology/
+https://msutexas.edu/academics/hss/faculty.php
+
+# College of Science and Mathematics
+https://msutexas.edu/academics/scienceandmath/
+https://msutexas.edu/academics/scienceandmath/biology/
+https://msutexas.edu/academics/scienceandmath/chemistry/
+https://msutexas.edu/academics/scienceandmath/computer-science/
+https://msutexas.edu/academics/scienceandmath/mathematics/
+https://msutexas.edu/academics/scienceandmath/physics/
+https://msutexas.edu/academics/scienceandmath/faculty.php
+
+# West College of Education
+https://msutexas.edu/academics/education2/
+
+# ===== Administration & Leadership =====
+https://msutexas.edu/president/
+https://msutexas.edu/provost/
+https://msutexas.edu/about/leadership/
+
+# ===== Admissions =====
+https://msutexas.edu/admissions/
+https://msutexas.edu/admissions/freshman/
+https://msutexas.edu/admissions/transfer/
+https://msutexas.edu/admissions/graduate/
+https://msutexas.edu/admissions/international/
+https://msutexas.edu/admissions/requirements.php
+https://msutexas.edu/admissions/visit/
+
+# ===== Registrar & Academic Calendar =====
+https://msutexas.edu/registrar/
+https://msutexas.edu/registrar/calendars/
+https://msutexas.edu/registrar/registration/
+https://msutexas.edu/registrar/records/
+https://msutexas.edu/registrar/graduation/
+
+# ===== Financial Aid & Scholarships =====
+https://msutexas.edu/finaid/
+https://msutexas.edu/finaid/how-to-apply/
+https://msutexas.edu/finaid/types/
+https://msutexas.edu/finaid/scholarships/
+https://msutexas.edu/finaid/cost/
+
+# ===== Student Life & Services =====
+https://msutexas.edu/student-life/
+https://msutexas.edu/student-life/organizations/
+https://msutexas.edu/student-life/events/
+https://msutexas.edu/counseling/
+https://msutexas.edu/wellness/
+https://msutexas.edu/career-management/
+
+# ===== Campus Resources =====
+https://msutexas.edu/library/
+https://msutexas.edu/it/
+https://msutexas.edu/parking/
+https://msutexas.edu/dining/
+https://msutexas.edu/bookstore/
+
+# ===== Athletics =====
+https://msumustangs.com/
+https://msumustangs.com/sports/football
+https://msumustangs.com/sports/basketball-men
+https://msumustangs.com/sports/basketball-women
+
+# ===== Graduate Programs =====
+https://msutexas.edu/academics/graduate/
+https://msutexas.edu/academics/graduate/programs/
+https://msutexas.edu/academics/graduate/admissions/
+
+# ===== Online Programs =====
+https://msutexas.edu/distance/
+https://msutexas.edu/distance/programs/
+
+# ===== Campus Safety =====
+https://msutexas.edu/police/
+https://msutexas.edu/police/services/
+
+# ===== Diversity & Inclusion =====
+https://msutexas.edu/diversity/
+
+# ===== Research =====
+https://msutexas.edu/research/
+
+# ===== Specific Faculty & Staff Pages =====
+https://msutexas.edu/academics/business/departments/
+https://msutexas.edu/academics/business/faculty-staff/
+https://msutexas.edu/academics/business/accounting/faculty.php
+https://msutexas.edu/academics/business/finance/faculty.php
+https://msutexas.edu/academics/business/management/faculty.php
+https://msutexas.edu/academics/business/marketing/faculty.php
+
+# Computer Science Faculty
+https://msutexas.edu/academics/scienceandmath/computer-science/faculty.php
+https://msutexas.edu/academics/scienceandmath/computer-science/people.php
+
+# All Departments Faculty
+https://msutexas.edu/academics/business/people/
+https://msutexas.edu/academics/education/people/
+https://msutexas.edu/academics/hs2/people/
+https://msutexas.edu/academics/hss/people/
+https://msutexas.edu/academics/scienceandmath/people/
+
+# Staff Directory
+https://msutexas.edu/directory/faculty/
+https://msutexas.edu/directory/staff/
+# ===== Faculty & Staff (WORKING URLS) =====
+# Business College Faculty
+https://msutexas.edu/academics/business/faculty/
+https://msutexas.edu/academics/business/meet-our-faculty.php
+https://msutexas.edu/academics/business/management/contact.php
+https://msutexas.edu/academics/business/finance/contact.php
+https://msutexas.edu/academics/business/accounting/contact.php
+https://msutexas.edu/academics/business/marketing/contact.php
+https://directory.msutexas.edu/departments/college-of-business-administration-dillard
+
+# Other Colleges - Adjust based on actual structure
+https://msutexas.edu/academics/education/
+https://msutexas.edu/academics/hs2/
+https://msutexas.edu/academics/hss/
+https://msutexas.edu/academics/scienceandmath/
+https://msutexas.edu/academics/scienceandmath/computer-science/

@@ -1,25 +1,44 @@
 """
-Rate limiting and usage tracking for public demo
+Enhanced rate limiting with persistent device tracking
 """
 import streamlit as st
 from datetime import datetime
 import hashlib
 import json
 from pathlib import Path
+import socket
 
 # Usage limits
 MAX_QUERIES_PER_DEVICE = 5
 TOTAL_QUERY_LIMIT = 5000
 ALERT_EMAIL = "saimudragada1@gmail.com"
 
-def get_device_id():
-    """Create semi-persistent device identifier"""
-    if 'device_id' not in st.session_state:
-        import random
-        st.session_state.device_id = hashlib.md5(
-            f"{datetime.now()}{random.random()}".encode()
-        ).hexdigest()
-    return st.session_state.device_id
+def get_device_fingerprint():
+    """
+    Create persistent device identifier using multiple signals
+    More robust than session-only tracking
+    """
+    # Try to get IP address from Streamlit headers
+    try:
+        # In deployed environment, get forwarded IP
+        headers = st.context.headers if hasattr(st, 'context') else {}
+        ip = headers.get('X-Forwarded-For', headers.get('X-Real-Ip', 'unknown'))
+        
+        # Combine with user agent for better fingerprinting
+        user_agent = headers.get('User-Agent', 'unknown')
+        
+        # Create fingerprint from IP + user agent
+        fingerprint_string = f"{ip}_{user_agent}"
+        device_id = hashlib.sha256(fingerprint_string.encode()).hexdigest()
+        
+        return device_id
+    except:
+        # Fallback to session-based if headers not available
+        if 'device_id' not in st.session_state:
+            st.session_state.device_id = hashlib.md5(
+                f"{datetime.now()}{id(st.session_state)}".encode()
+            ).hexdigest()
+        return st.session_state.device_id
 
 def load_usage_stats():
     """Load usage statistics from file"""
@@ -41,7 +60,7 @@ def save_usage_stats(stats):
 
 def check_device_limit():
     """Check if device has queries remaining"""
-    device_id = get_device_id()
+    device_id = get_device_fingerprint()
     stats = load_usage_stats()
     
     device_count = stats['devices'].get(device_id, 0)
@@ -62,7 +81,7 @@ def check_global_limit():
 
 def increment_usage():
     """Increment usage counters and send alerts if needed"""
-    device_id = get_device_id()
+    device_id = get_device_fingerprint()
     stats = load_usage_stats()
     
     # Increment counters
@@ -87,7 +106,7 @@ def increment_usage():
     return stats['total_queries'], stats['devices'][device_id]
 
 def send_alert_email(message):
-    """Log alert - you'll check this file manually"""
+    """Log alert - check alerts.log file manually"""
     log_file = Path("alerts.log")
     with open(log_file, 'a') as f:
         f.write(f"{datetime.now()} - {message}\n")
@@ -96,7 +115,7 @@ def send_alert_email(message):
 def get_usage_display():
     """Get usage stats for display"""
     stats = load_usage_stats()
-    device_id = get_device_id()
+    device_id = get_device_fingerprint()
     device_count = stats['devices'].get(device_id, 0)
     
     return {

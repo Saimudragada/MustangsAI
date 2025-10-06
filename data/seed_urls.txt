@@ -157,3 +157,30 @@ https://msutexas.edu/academics/hs2/
 https://msutexas.edu/academics/hss/
 https://msutexas.edu/academics/scienceandmath/
 https://msutexas.edu/academics/scienceandmath/computer-science/
+# ===== Additional High-Value Sources =====
+# Academic Calendars & Deadlines
+https://msutexas.edu/registrar/calendars/2024-2025.php
+https://msutexas.edu/registrar/calendars/2025-2026.php
+
+# Tuition & Costs
+https://msutexas.edu/business-office/tuition-and-fees/
+https://msutexas.edu/business-office/
+
+# Student Services
+https://msutexas.edu/student-success/
+https://msutexas.edu/disability/
+https://msutexas.edu/international-students/
+
+# Campus Map & Locations
+https://msutexas.edu/about/campus-map/
+
+# Technology Services
+https://msutexas.edu/it/students/
+https://msutexas.edu/it/email/
+
+# Library Services
+https://msutexas.edu/library/hours/
+https://msutexas.edu/library/services/
+
+# Employment
+https://msutexas.edu/human-resources/employment/

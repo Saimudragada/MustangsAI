@@ -1,7 +1,6 @@
 .venv/
 __pycache__/
 *.pyc
-vectorstore/
 data/raw/
 .DS_Store
 .vscode/
@@ -10,3 +9,4 @@ data/raw/
 # Usage tracking - don't commit to GitHub
 usage_stats.json
 alerts.log
+.streamlit/secrets.toml

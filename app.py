@@ -455,12 +455,26 @@ else:
             st.rerun()
         
         # Display history
-        for u, a, cites in st.session_state.history:
+        for idx, (u, a, cites) in enumerate(st.session_state.history):
             with st.chat_message("user"):
                 st.write(u)
             
             with st.chat_message("assistant"):
                 st.write(a)
+                
+                # Feedback buttons
+                col1, col2, col3 = st.columns([0.5, 0.5, 11])
+                with col1:
+                    if st.button("👍", key=f"up_{idx}", help="Helpful"):
+                        from feedback import add_feedback
+                        add_feedback(u, a, 'positive')
+                        st.success("Thanks!")
+                with col2:
+                    if st.button("👎", key=f"down_{idx}", help="Not helpful"):
+                        from feedback import add_feedback
+                        add_feedback(u, a, 'negative')
+                        st.info("We'll improve!")
+                
                 if cites:
                     with st.expander("📚 View Sources", expanded=False):
                         for i, c in enumerate(cites, 1):

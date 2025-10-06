@@ -10,3 +10,4 @@ data/raw/
 usage_stats.json
 alerts.log
 .streamlit/secrets.toml
+feedback.json

@@ -469,7 +469,14 @@ else:
                             if i < len(cites):
                                 st.markdown("---")
         
-        # Chat input
+        # Footer disclaimer BEFORE chat input
+        st.markdown("""
+        <div class="disclaimer">
+            MustangsAI can make mistakes. Consider checking important information.
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Chat input - this will now be at the very bottom
         q = st.chat_input("Ask me anything about MSU Texas...")
         
         if q:
@@ -521,9 +528,4 @@ else:
                 st.success("Thanks for trying MustangsAI! 🎓")
                 st.info("Want unlimited access? Email saimudragada1@gmail.com")
         
-        # Footer
-        st.markdown("""
-        <div class="disclaimer">
-            MustangsAI can make mistakes. Consider checking important information.
-        </div>
-        """, unsafe_allow_html=True)
+      

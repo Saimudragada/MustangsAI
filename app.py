@@ -217,7 +217,6 @@ if not st.session_state.chat_started:
     </div>
     """, unsafe_allow_html=True)
     
-     
     # Topic buttons
     st.markdown("""
     <div style="text-align: center; margin: 2rem 0 1.5rem 0;">
@@ -225,16 +224,9 @@ if not st.session_state.chat_started:
     </div>
     """, unsafe_allow_html=True)
     
+    # Row 1: All 5 buttons
     col1, col2, col3, col4, col5 = st.columns(5)
-    # Usage display
-    usage = get_usage_display()
     
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
-        if usage['total_queries'] < 4500:
-            st.info(f"🚀 Free demo - ask away!")
-        else:
-            st.warning(f"Demo nearing limit: {usage['remaining']} queries left")
     topics = [
         ("Admissions", "What are the admission requirements for MSU Texas?"),
         ("Financial Aid", "How do I apply for financial aid?"),
@@ -248,34 +240,22 @@ if not st.session_state.chat_started:
     for i, (topic_name, question) in enumerate(topics):
         with cols[i]:
             if st.button(topic_name, key=f"topic_{i}", use_container_width=True):
-                # Check global limit only
                 allowed, error_msg = check_global_limit()
-                
                 if not allowed:
                     st.error(error_msg)
                     st.stop()
-                
                 st.session_state.chat_started = True
                 st.session_state.first_query = question
                 st.rerun()
     
+    # Row 2: Library (centered)
     col_left, col_center, col_right = st.columns([2, 1, 2])
     with col_center:
         if st.button("Library", key="topic_library", use_container_width=True):
-            # Check limits
-            allowed_global, error_msg = check_global_limit()
-            allowed_device, remaining = check_device_limit()
-            
-            if not allowed_global:
+            allowed, error_msg = check_global_limit()
+            if not allowed:
                 st.error(error_msg)
-                st.info("This was a public demo. For full access, contact saimudragada1@gmail.com")
                 st.stop()
-            
-            if not allowed_device:
-                st.warning("You've reached your 5-question limit.")
-                st.info("Want full access? Email saimudragada1@gmail.com")
-                st.stop()
-            
             st.session_state.chat_started = True
             st.session_state.first_query = "Tell me about the MSU Texas library."
             st.rerun()
@@ -288,20 +268,10 @@ if not st.session_state.chat_started:
         welcome_query = st.chat_input("Type your question...", key="welcome_input")
         
         if welcome_query:
-            # Check limits
-            allowed_global, error_msg = check_global_limit()
-            allowed_device, remaining = check_device_limit()
-            
-            if not allowed_global:
+            allowed, error_msg = check_global_limit()
+            if not allowed:
                 st.error(error_msg)
-                st.info("This was a public demo. For full access, contact saimudragada1@gmail.com")
                 st.stop()
-            
-            if not allowed_device:
-                st.warning("You've reached your 5-question limit for this demo.")
-                st.info("Want full access? Email saimudragada1@gmail.com")
-                st.stop()
-            
             st.session_state.chat_started = True
             st.session_state.first_query = welcome_query
             st.rerun()
@@ -373,7 +343,7 @@ else:
             with st.spinner("Searching..."):
                 docs = retrieve(q, k=6)
                 ans, cites = answer_with_citations(q, docs)
-                total_queries, device_queries = increment_usage()
+                increment_usage()
             
             st.session_state.history.append((q, ans, cites))
         
@@ -382,18 +352,15 @@ else:
             q = st.session_state.nav_query
             del st.session_state.nav_query
             
-            # Check limits
-            allowed_global, error_msg = check_global_limit()
-            allowed_device, remaining = check_device_limit()
-            
-            if not allowed_global or not allowed_device:
-                st.warning("Query limit reached. You've used all your demo questions.")
+            allowed, error_msg = check_global_limit()
+            if not allowed:
+                st.warning("Query limit reached.")
                 st.stop()
             
             with st.spinner("Searching..."):
                 docs = retrieve(q, k=6)
                 ans, cites = answer_with_citations(q, docs)
-                total_queries, device_queries = increment_usage()
+                increment_usage()
             
             st.session_state.history.append((q, ans, cites))
             st.rerun()
@@ -427,18 +394,15 @@ else:
             q = st.session_state.suggestion_clicked
             del st.session_state.suggestion_clicked
             
-            # Check limits
-            allowed_global, error_msg = check_global_limit()
-            allowed_device, remaining = check_device_limit()
-            
-            if not allowed_global or not allowed_device:
+            allowed, error_msg = check_global_limit()
+            if not allowed:
                 st.warning("Query limit reached.")
                 st.stop()
             
             with st.spinner("Searching..."):
                 docs = retrieve(q, k=6)
                 ans, cites = answer_with_citations(q, docs)
-                total_queries, device_queries = increment_usage()
+                increment_usage()
             
             st.session_state.history.append((q, ans, cites))
             st.rerun()
@@ -479,35 +443,32 @@ else:
         </div>
         """, unsafe_allow_html=True)
         
-        # Chat input - this will now be at the very bottom
+        # Chat input
         q = st.chat_input("Ask me anything about MSU Texas...")
         
-    if q:
-        # Check global limit
-        allowed, error_msg = check_global_limit()
-        if not allowed:
-            st.error(error_msg)
-            st.info("Want unlimited access? Email saimudragada1@gmail.com")
-            st.stop()
-        
-        with st.chat_message("user"):
-            st.write(q)
-        
-        with st.spinner("Searching..."):
-            docs = retrieve(q, k=6)
-            ans, cites = answer_with_citations(q, docs)
-            total_queries, device_queries = increment_usage()
-        
-        st.session_state.history.append((q, ans, cites))
-        
-        with st.chat_message("assistant"):
-            st.write(ans)
-            if cites:
-                with st.expander("📚 View Sources", expanded=False):
-                    for i, c in enumerate(cites, 1):
-                        st.markdown(f"**Source {i}:** [{c['source']}]({c['source']})")
-                        st.caption(c['preview'])
-                        if i < len(cites):
-                            st.markdown("---")
-        
-       
+        if q:
+            allowed, error_msg = check_global_limit()
+            if not allowed:
+                st.error(error_msg)
+                st.info("Want unlimited access? Email saimudragada1@gmail.com")
+                st.stop()
+            
+            with st.chat_message("user"):
+                st.write(q)
+            
+            with st.spinner("Searching..."):
+                docs = retrieve(q, k=6)
+                ans, cites = answer_with_citations(q, docs)
+                increment_usage()
+            
+            st.session_state.history.append((q, ans, cites))
+            
+            with st.chat_message("assistant"):
+                st.write(ans)
+                if cites:
+                    with st.expander("📚 View Sources", expanded=False):
+                        for i, c in enumerate(cites, 1):
+                            st.markdown(f"**Source {i}:** [{c['source']}]({c['source']})")
+                            st.caption(c['preview'])
+                            if i < len(cites):
+                                st.markdown("---")

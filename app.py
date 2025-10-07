@@ -13,11 +13,9 @@ from langchain.prompts import ChatPromptTemplate
 
 from utils import truncate
 from rate_limiter import (
-    check_device_limit, 
     check_global_limit, 
     increment_usage,
-    get_usage_display,
-    MAX_QUERIES_PER_DEVICE
+    get_usage_display
 )
 
 load_dotenv()
@@ -219,17 +217,7 @@ if not st.session_state.chat_started:
     </div>
     """, unsafe_allow_html=True)
     
-    # Usage display - only show user's remaining queries
-    usage = get_usage_display()
-    
-    # Only show personal limit (hide global count)
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
-        if usage['remaining'] > 0:
-            st.info(f"💬 You have **{usage['remaining']} questions** remaining")
-        else:
-            st.warning("You've used all 5 demo questions")
-    
+     
     # Topic buttons
     st.markdown("""
     <div style="text-align: center; margin: 2rem 0 1.5rem 0;">
@@ -238,7 +226,15 @@ if not st.session_state.chat_started:
     """, unsafe_allow_html=True)
     
     col1, col2, col3, col4, col5 = st.columns(5)
+    # Usage display
+    usage = get_usage_display()
     
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        if usage['total_queries'] < 4500:
+            st.info(f"🚀 Free demo - ask away!")
+        else:
+            st.warning(f"Demo nearing limit: {usage['remaining']} queries left")
     topics = [
         ("Admissions", "What are the admission requirements for MSU Texas?"),
         ("Financial Aid", "How do I apply for financial aid?"),
@@ -252,18 +248,11 @@ if not st.session_state.chat_started:
     for i, (topic_name, question) in enumerate(topics):
         with cols[i]:
             if st.button(topic_name, key=f"topic_{i}", use_container_width=True):
-                # Check limits before starting chat
-                allowed_global, error_msg = check_global_limit()
-                allowed_device, remaining = check_device_limit()
+                # Check global limit only
+                allowed, error_msg = check_global_limit()
                 
-                if not allowed_global:
+                if not allowed:
                     st.error(error_msg)
-                    st.info("This was a public demo. For full access, contact saimudragada1@gmail.com")
-                    st.stop()
-                
-                if not allowed_device:
-                    st.warning("You've reached your 5-question limit for this demo.")
-                    st.info("Want full access? Email saimudragada1@gmail.com")
                     st.stop()
                 
                 st.session_state.chat_started = True
@@ -493,53 +482,32 @@ else:
         # Chat input - this will now be at the very bottom
         q = st.chat_input("Ask me anything about MSU Texas...")
         
-        if q:
-            # Check global limit first
-            allowed_global, error_msg = check_global_limit()
-            if not allowed_global:
-                st.error(error_msg)
-                st.info("This was a public demo for LinkedIn. For full access, contact saimudragada1@gmail.com")
-                st.stop()
-            
-            # Check device limit
-            allowed_device, remaining = check_device_limit()
-            if not allowed_device:
-                st.warning("You've reached your 5-question limit for this demo.")
-                st.info("""
-                **Want full access to MustangsAI?**
-                - MSU Students/Staff: Contact MSU IT for campus deployment
-                - Others: Email saimudragada1@gmail.com
-                
-                Thanks for trying MustangsAI!
-                """)
-                st.stop()
-            
-            with st.chat_message("user"):
-                st.write(q)
-            
-            with st.spinner("Searching..."):
-                docs = retrieve(q, k=6)
-                ans, cites = answer_with_citations(q, docs)
-                total_queries, device_queries = increment_usage()
-            
-            st.session_state.history.append((q, ans, cites))
-            
-            with st.chat_message("assistant"):
-                st.write(ans)
-                if cites:
-                    with st.expander("📚 View Sources", expanded=False):
-                        for i, c in enumerate(cites, 1):
-                            st.markdown(f"**Source {i}:** [{c['source']}]({c['source']})")
-                            st.caption(c['preview'])
-                            if i < len(cites):
-                                st.markdown("---")
-            
-            # Show remaining questions - friendlier message
-            remaining_now = MAX_QUERIES_PER_DEVICE - device_queries
-            if remaining_now > 0:
-                st.info(f"💬 {remaining_now} question{'s' if remaining_now != 1 else ''} remaining")
-            else:
-                st.success("Thanks for trying MustangsAI! 🎓")
-                st.info("Want unlimited access? Email saimudragada1@gmail.com")
+    if q:
+        # Check global limit
+        allowed, error_msg = check_global_limit()
+        if not allowed:
+            st.error(error_msg)
+            st.info("Want unlimited access? Email saimudragada1@gmail.com")
+            st.stop()
         
-      
+        with st.chat_message("user"):
+            st.write(q)
+        
+        with st.spinner("Searching..."):
+            docs = retrieve(q, k=6)
+            ans, cites = answer_with_citations(q, docs)
+            total_queries, device_queries = increment_usage()
+        
+        st.session_state.history.append((q, ans, cites))
+        
+        with st.chat_message("assistant"):
+            st.write(ans)
+            if cites:
+                with st.expander("📚 View Sources", expanded=False):
+                    for i, c in enumerate(cites, 1):
+                        st.markdown(f"**Source {i}:** [{c['source']}]({c['source']})")
+                        st.caption(c['preview'])
+                        if i < len(cites):
+                            st.markdown("---")
+        
+       

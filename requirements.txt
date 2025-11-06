@@ -4,13 +4,10 @@ beautifulsoup4
 readability-lxml
 markdownify
 sentence-transformers
-chromadb
+chromadb==1.0.20
 numpy
 pandas
 python-dotenv
 loguru
-chromadb==1.0.20
 pydantic<3
-openai
-
-
+pdfminer.six

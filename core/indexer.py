@@ -1,10 +1,11 @@
 # core/indexer.py
 import os
-from dotenv import load_dotenv
-from sentence_transformers import SentenceTransformer
+from loguru import logger
 import chromadb
 from chromadb.utils import embedding_functions
-from core.ingest import fetch_clean
+from dotenv import load_dotenv
+
+from core.ingest import fetch_all
 from core.chunk import build_docs
 
 load_dotenv()
@@ -28,15 +29,15 @@ def build_index():
 
     ids, texts, metas = [], [], []
     for url in urls:
-        rec = fetch_clean(url)
-        docs = build_docs(rec, source="msutexas")
+        docs = fetch_all(url)
         for d in docs:
-            ids.append(f"{url}:::{d['chunk_id']}")
-            texts.append(d["text"])
-            metas.append({"url": d["url"], "title": d["title"], "chunk_id": d["chunk_id"]})
+            for doc in build_docs(d, source="msutexas"):
+                ids.append(doc["id"])
+                texts.append(doc["text"])
+                metas.append(doc["meta"])
 
     collection.upsert(documents=texts, metadatas=metas, ids=ids)
-    print(f"Indexed {len(ids)} chunks from {len(urls)} URLs into {CHROMA_DIR}")
+    logger.info(f"Indexed {len(ids)} chunks from {len(urls)} seed URLs into {CHROMA_DIR}")
 
 if __name__ == "__main__":
     build_index()

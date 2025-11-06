@@ -1,6 +1,6 @@
 # 🐴 MustangsAI - Intelligent Assistant for MSU Texas
 
-**An AI-powered knowledge assistant serving 10,000+ Midwestern State University students, answering questions about admissions, housing, academics, and campus life in under 5 seconds - with 78% user satisfaction.**
+**An AI-powered knowledge assistant serving all Midwestern State University students, answering questions about admissions, housing, academics, and campus life in under 5 seconds - with 78% user satisfaction.**
 
 **🌐 Live Demo:** [mustangsai-production.up.railway.app](https://mustangsai-production.up.railway.app/)
 

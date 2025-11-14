@@ -7,13 +7,12 @@ from datetime import datetime
 import base64
 
 from langchain_community.vectorstores import FAISS
-from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 from langchain.schema import Document
 from langchain.prompts import ChatPromptTemplate
 
 from utils import truncate
 from rate_limiter import (
-    check_global_limit, 
+    check_global_limit,
     increment_usage,
     get_usage_display
 )
@@ -29,8 +28,20 @@ st.set_page_config(
 )
 
 VSTORE_DIR = Path("vectorstore/faiss_index")
-EMBED_MODEL = os.getenv("OPENAI_EMBED_MODEL", "text-embedding-3-small")
-CHAT_MODEL = os.getenv("OPENAI_CHAT_MODEL", "gpt-4o-mini")
+
+# Determine which API to use
+USE_GEMINI = os.getenv("USE_GEMINI", "false").lower() == "true"
+
+if USE_GEMINI:
+    # Google Gemini configuration
+    from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI
+    EMBED_MODEL = os.getenv("GEMINI_EMBED_MODEL", "models/embedding-001")
+    CHAT_MODEL = os.getenv("GEMINI_CHAT_MODEL", "gemini-1.5-flash")
+else:
+    # OpenAI configuration (default)
+    from langchain_openai import OpenAIEmbeddings, ChatOpenAI
+    EMBED_MODEL = os.getenv("OPENAI_EMBED_MODEL", "text-embedding-3-small")
+    CHAT_MODEL = os.getenv("OPENAI_CHAT_MODEL", "gpt-4o-mini")
 
 # Load mascot image
 def get_image_base64(image_path):
@@ -159,7 +170,12 @@ st.markdown("""
 def get_vectorstore():
     if not VSTORE_DIR.exists():
         raise RuntimeError("Vector store not found. Run `python ingest.py` first.")
-    embeddings = OpenAIEmbeddings(model=EMBED_MODEL)
+
+    if USE_GEMINI:
+        embeddings = GoogleGenerativeAIEmbeddings(model=EMBED_MODEL)
+    else:
+        embeddings = OpenAIEmbeddings(model=EMBED_MODEL)
+
     vs = FAISS.load_local(str(VSTORE_DIR), embeddings, allow_dangerous_deserialization=True)
     return vs
 
@@ -226,7 +242,13 @@ def answer_with_citations(question: str, docs: list[Document]) -> tuple[str, lis
         return rejection_msg, []
 
     context = "\n\n".join([d.page_content for d in docs])
-    llm = ChatOpenAI(model=CHAT_MODEL, temperature=0)
+
+    # Use appropriate chat model based on configuration
+    if USE_GEMINI:
+        llm = ChatGoogleGenerativeAI(model=CHAT_MODEL, temperature=0)
+    else:
+        llm = ChatOpenAI(model=CHAT_MODEL, temperature=0)
+
     prompt = PROMPT_TMPL.format_messages(question=question, context=context)
     resp = llm.invoke(prompt)
 

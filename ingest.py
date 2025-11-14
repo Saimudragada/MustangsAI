@@ -6,7 +6,6 @@ from dotenv import load_dotenv
 from langchain.docstore.document import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
-from langchain_openai import OpenAIEmbeddings
 
 from langchain_community.document_loaders import (
     WebBaseLoader,
@@ -24,7 +23,17 @@ RAW_DIR = DATA_DIR / "raw"
 SEED_FILE = DATA_DIR / "seed_urls.txt"
 VSTORE_DIR = Path("vectorstore/faiss_index")
 
-EMBED_MODEL = os.getenv("OPENAI_EMBED_MODEL", "text-embedding-3-small")
+# Determine which API to use
+USE_GEMINI = os.getenv("USE_GEMINI", "false").lower() == "true"
+
+if USE_GEMINI:
+    from langchain_google_genai import GoogleGenerativeAIEmbeddings
+    EMBED_MODEL = os.getenv("GEMINI_EMBED_MODEL", "models/embedding-001")
+    print(f"[ingest] Using Google Gemini embeddings: {EMBED_MODEL}")
+else:
+    from langchain_openai import OpenAIEmbeddings
+    EMBED_MODEL = os.getenv("OPENAI_EMBED_MODEL", "text-embedding-3-small")
+    print(f"[ingest] Using OpenAI embeddings: {EMBED_MODEL}")
 
 def load_web_docs(seed_file: Path) -> list[Document]:
     urls = []
@@ -80,7 +89,11 @@ def chunk_docs(docs, chunk_size=1200, chunk_overlap=200):
     return chunks
 
 def build_faiss(chunks):
-    embeddings = OpenAIEmbeddings(model=EMBED_MODEL)
+    if USE_GEMINI:
+        embeddings = GoogleGenerativeAIEmbeddings(model=EMBED_MODEL)
+    else:
+        embeddings = OpenAIEmbeddings(model=EMBED_MODEL)
+
     vs = FAISS.from_documents(chunks, embeddings)
     VSTORE_DIR.mkdir(parents=True, exist_ok=True)
     vs.save_local(str(VSTORE_DIR))

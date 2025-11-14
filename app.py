@@ -181,12 +181,55 @@ PROMPT_TMPL = ChatPromptTemplate.from_messages([
     ("human", "Question: {question}\n\nContext:\n{context}\n\nAnswer:"),
 ])
 
+def is_msu_related(question: str) -> bool:
+    """Check if question is related to MSU Texas"""
+    # Keywords that indicate MSU-related questions
+    msu_keywords = [
+        'msu', 'midwestern state', 'mustang', 'admissions', 'enrollment',
+        'campus', 'dorm', 'housing', 'registrar', 'financial aid', 'scholarship',
+        'course', 'class', 'degree', 'program', 'major', 'faculty', 'professor',
+        'library', 'student', 'tuition', 'fee', 'wichita falls', 'texas',
+        'graduation', 'transcript', 'gpa', 'deadline', 'semester', 'academic',
+        'department', 'college', 'university', 'residence hall', 'dining',
+        'parking', 'athletics', 'sports', 'event', 'organization', 'club'
+    ]
+
+    question_lower = question.lower()
+
+    # Check if question contains any MSU-related keywords
+    if any(keyword in question_lower for keyword in msu_keywords):
+        return True
+
+    # Check for generic university questions (could be MSU-related)
+    generic_uni_terms = ['apply', 'application', 'enroll', 'transfer', 'graduate']
+    if any(term in question_lower for term in generic_uni_terms):
+        # Use LLM to classify if ambiguous
+        return True
+
+    # Reject clearly off-topic questions
+    off_topic_keywords = [
+        'weather', 'news', 'recipe', 'movie', 'music', 'sports score',
+        'stock', 'celebrity', 'politics', 'covid', 'world cup', 'what is the capital',
+        'who is the president', 'translate', 'calculate', 'solve', 'python code'
+    ]
+
+    if any(keyword in question_lower for keyword in off_topic_keywords):
+        return False
+
+    return True
+
 def answer_with_citations(question: str, docs: list[Document]) -> tuple[str, list[dict]]:
+    # Check if question is MSU-related
+    if not is_msu_related(question):
+        rejection_msg = ("Sorry, I can only answer questions about MSU Texas. "
+                        "Please ask me about admissions, housing, academics, or campus life.")
+        return rejection_msg, []
+
     context = "\n\n".join([d.page_content for d in docs])
     llm = ChatOpenAI(model=CHAT_MODEL, temperature=0)
     prompt = PROMPT_TMPL.format_messages(question=question, context=context)
     resp = llm.invoke(prompt)
-    
+
     cites = []
     for d in docs:
         meta = d.metadata or {}
